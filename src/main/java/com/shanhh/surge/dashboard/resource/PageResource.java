@@ -19,12 +19,7 @@ public class PageResource {
 
     @RequestMapping("/")
     public String index(ModelMap model) throws JsonProcessingException {
-        return "menu";
-    }
-
-    @RequestMapping("/menu")
-    public String menu(ModelMap model) throws JsonProcessingException {
-        return "menu";
+        return "dashboard";
     }
 
     @RequestMapping("/policy")
