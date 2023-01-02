@@ -2,8 +2,6 @@
 <#include "common/header.ftl">
 
 <body>
-
-<#include "common/navbar.ftl">
 <main>
     <div id="chart-title" class="bg-light text-center">Global</div>
     <div class="bg-light">
@@ -27,21 +25,9 @@
         </div>
     </div>
 
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Source IP</th>
-            <th scope="col">MAC</th>
-            <th scope="col">Upload</th>
-            <th scope="col">Download</th>
-            <th scope="col">Total</th>
-        </tr>
-        </thead>
-        <tbody id="device-list">
-        </tbody>
-    </table>
+    <dev>
+        <table id="device-table" class="table table-striped"></table>
+    </dev>
 </main>
 
 

@@ -22,15 +22,14 @@ public class PageResource {
         return "dashboard";
     }
 
-    @RequestMapping("/policy")
-    public String policy(ModelMap model) throws JsonProcessingException {
-        return "policy";
-    }
-
-
     @RequestMapping("/dashboard")
     public String dashboard(ModelMap model) throws JsonProcessingException {
         return "dashboard";
+    }
+
+    @RequestMapping("/requests")
+    public String policy(ModelMap model) throws JsonProcessingException {
+        return "requests";
     }
 
 }

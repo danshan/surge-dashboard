@@ -136,7 +136,7 @@ const updateGlobalChart = function (speed) {
     }
 }
 
-const updateDeviceChart = function() {
+const updateDeviceChart = function () {
     const selected = deviceList.filter(device => device.physicalAddress === selectedDevice)[0];
 
     deviceUpload.push(selected.currentOutSpeed);
@@ -183,22 +183,21 @@ const getDevices = function () {
         url: '/api/surge/devices',
         success: function (devices) {
             deviceList = devices;
-            let html = '';
+            let tabledata = [];
             $.each(devices, function (index, device) {
-                html += `
-                <tr onclick='showDeviceSpeed("${device.physicalAddress}")'>
-                    <th scope="row">${index}</th>
-                    <td>${device.name}</td>
-                    <td>${device.sourceIP}</td>
-                    <td>${device.physicalAddress}</td>
-                    <td>${bytes(device.currentOutSpeed, {decimalPlaces: 2})}/s</td>
-                    <td>${bytes(device.currentInSpeed, {decimalPlaces: 2})}/s</td>
-                    <td>${bytes(device.totalBytes, {decimalPlaces: 0})}</td>
-                </tr>
-                `;
+                tabledata.push({
+                    id: index + 1,
+                    name: device.name,
+                    sourceIP: device.sourceIP,
+                    physicalAddress: device.physicalAddress,
+                    upload: bytes(device.currentOutSpeed, {decimalPlaces: 2}),
+                    download: bytes(device.currentInSpeed, {decimalPlaces: 2}),
+                    totalBytes: bytes(device.totalBytes, {decimalPlaces: 0})
+                });
             });
 
-            $("#device-list").html(html);
+            $("#device-table").bootstrapTable('load', tabledata);
+
             if (chartTarget === 'device') {
                 updateDeviceChart();
             }
@@ -211,7 +210,7 @@ const refreshData = function () {
     getDevices();
 };
 
-setInterval(refreshData, 1000);
+
 
 const showGlobalSpeed = function () {
     if (chartTarget === 'global') {
@@ -230,3 +229,57 @@ const showDeviceSpeed = function (physicalAddress) {
     deviceUpload = getInitialData();
     deviceDownload = getInitialData();
 };
+
+
+$("#device-table").bootstrapTable({
+    data: [],
+    columns: [
+        {
+            field: 'id',
+            title: '#',
+            sortable: true,
+            searchable: false,
+        },
+        {
+            field: 'name',
+            title: 'Device Name',
+            sortable: true,
+        },
+        {
+            field: 'sourceIP',
+            title: 'Device IP',
+            sortable: true,
+        },
+        {
+            field: 'physicalAddress',
+            title: 'MAC Address',
+            sortable: true,
+        },
+        {
+            field: 'upload',
+            title: 'Upload',
+            sortable: true,
+            searchable: false,
+        },
+        {
+            field: 'download',
+            title: 'Download',
+            sortable: true,
+            searchable: false,
+        },
+        {
+            field: 'totalBytes',
+            title: 'Total',
+            sortable: true,
+            searchable: false,
+        }
+    ],
+    search: true,
+    searchHighlight: true,
+    showColumns: true,
+    onClickRow: function(row, $element, field) {
+        showDeviceSpeed(row.physicalAddress);
+    },
+});
+
+setInterval(refreshData, 1000);
