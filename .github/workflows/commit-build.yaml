@@ -18,24 +18,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set variables
-        run: |
-          echo "RELEASE_NAME=Build for commit on $(date +%Y%m%d_%H%M)" >> $GITHUB_ENV
-          echo "TAG_NAME=COMMIT_$(date +%Y%m%d_%H%M)" >> $GITHUB_ENV
-
-      - name: Send telegram message on push
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: |
-            ${{ github.actor }} created commit:
-            Commit message: ${{ github.event.commits[0].message }}
-            
-            Repository: ${{ github.repository }}
-            
-            See changes: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
-
       - name: Checkout the default branch
         uses: actions/checkout@v2
 
@@ -53,61 +35,3 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/surge-dashboard:latest
-
-      - name: Use Node.js 16.x
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16.x
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Genarate configuration files
-        run: npx surgio generate
-
-      - name: Upload configuration files
-        run: npx surgio upload
-
-      - name: Move dist files to publish directory
-        run: mv dist publish
-
-      - name: Release and upload assets
-        uses: softprops/action-gh-release@v1
-        with:
-          name: ${{ env.RELEASE_NAME }}
-          tag_name: ${{ env.TAG_NAME }}
-          draft: false
-          prerelease: false
-          files: |
-            ./publish/*
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Git push assets to "release" branch
-        run: |
-          cd publish || exit 1
-          git init
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout -b release
-          git add .
-          git commit -m "${{ env.RELEASE_NAME }}"
-          git remote add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
-          git push -f -u origin release
-
-  notify:
-    name: Report to telegram
-    needs: [build]
-    if: ${{ always() }}
-
-    runs-on: ubuntu-latest
-    steps:
-      - name: send telegram message for action
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: |
-            Repository: ${{ github.repository }}
-            Status: ${{ needs.build.result }}
