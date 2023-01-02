@@ -3,8 +3,7 @@ FROM maven:3.8.5-openjdk-17 as build
 WORKDIR /workspace
 ADD . /workspace
 ENV WORKSPACE=/workspace
-RUN make -f CICD/Makefile all release
-
+RUN mvn clean package -U
 
 FROM azul/zulu-openjdk-alpine:17-jre-latest
 
