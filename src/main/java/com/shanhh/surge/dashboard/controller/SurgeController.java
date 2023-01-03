@@ -1,6 +1,7 @@
 package com.shanhh.surge.dashboard.controller;
 
 import com.shanhh.surge.dashboard.model.vo.DeviceVO;
+import com.shanhh.surge.dashboard.model.vo.RequestVO;
 import com.shanhh.surge.dashboard.model.vo.SpeedVO;
 import com.shanhh.surge.dashboard.service.SurgeService;
 import lombok.RequiredArgsConstructor;
@@ -30,5 +31,9 @@ public class SurgeController {
         return surgeService.findDevices();
     }
 
+    @RequestMapping("requests")
+    public List<RequestVO> getRequests() {
+        return surgeService.findRequests();
+    }
 
 }
