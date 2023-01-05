@@ -14,9 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -34,14 +34,17 @@ public class SurgeServiceImpl implements SurgeService {
 
     @Override
     public SpeedVO getSpeed() {
-        Optional<Traffic.Interface> traffic = surgeClient.getTraffic().getInterfaces().values().stream().findFirst();
-        if (traffic.isPresent()) {
-            SpeedVO speed = new SpeedVO();
-            BeanUtils.copyProperties(traffic.get(), speed);
-            return speed;
-        } else {
-            throw new IllegalArgumentException("get surge traffic failed");
-        }
+        Collection<Traffic.Interface> interfaces = surgeClient.getTraffic().getInterfaces().values();
+        SpeedVO speed = new SpeedVO();
+        interfaces.forEach(iface -> {
+            speed.setIn(speed.getIn() + iface.getIn())
+                    .setInCurrentSpeed(speed.getInCurrentSpeed() + iface.getInCurrentSpeed())
+                    .setInMaxSpeed(Math.max(speed.getInMaxSpeed(), iface.getInMaxSpeed()))
+                    .setOut(speed.getOut() + iface.getOut())
+                    .setOutCurrentSpeed(speed.getOutCurrentSpeed() + iface.getOutCurrentSpeed())
+                    .setOutMaxSpeed(Math.max(speed.getInMaxSpeed(), iface.getInMaxSpeed()));
+        });
+        return speed;
     }
 
     @Override

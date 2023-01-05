@@ -6,6 +6,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author honghao.shan
@@ -28,7 +32,11 @@ public class PageResource {
     }
 
     @RequestMapping("/requests")
-    public String policy(ModelMap model) throws JsonProcessingException {
+    public String policy(@RequestParam(value = "physicalAddress", required = false) String physicalAddress,
+                         ModelMap model) throws JsonProcessingException {
+        Map<String, String> data = new HashMap<>();
+        data.put("physicalAddress", physicalAddress);
+        model.addAttribute("data", objectMapper.writeValueAsString(data));
         return "requests";
     }
 
