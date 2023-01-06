@@ -281,12 +281,6 @@
                 searchable: false,
             },
             {
-                field: 'totalBytes',
-                title: 'Total',
-                sortable: true,
-                searchable: false,
-            },
-            {
                 field: 'operate',
                 title: 'Operation',
                 align: 'center',
