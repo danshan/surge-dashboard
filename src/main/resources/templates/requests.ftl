@@ -38,10 +38,8 @@
 </main>
 <#include "common/script.ftl">
 
-<script>
-    var data = ${data};
-</script>
 <script src="/js/byte.js"></script>
+<script src="/js/moment.js"></script>
 <script src="/js/requests.js"></script>
 </body>
 

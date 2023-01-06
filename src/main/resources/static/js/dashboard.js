@@ -24,7 +24,7 @@
     let deviceUpload = getInitialData();
     let deviceDownload = getInitialData();
 
-    let globalData = {
+    let chartValue = {
         labels: labels,
         datasets: [
             {
@@ -52,7 +52,7 @@
 
     const trafficChart = new Chart(ctx, {
         type: 'line',
-        data: globalData,
+        data: chartValue,
         options: {
             responsive: true,
             maintainAspectRatio: false,
@@ -126,7 +126,7 @@
         }
 
         if (chartTarget === "global") {
-            for (let dataset of globalData.datasets) {
+            for (let dataset of chartValue.datasets) {
                 if (dataset.label === 'Upload') {
                     dataset.data = globalUpload;
                 } else {
@@ -151,7 +151,7 @@
         }
 
         if (chartTarget === "device") {
-            for (let dataset of data.datasets) {
+            for (let dataset of globalData.datasets) {
                 if (dataset.label === 'Upload') {
                     dataset.data = deviceUpload;
                 } else {
@@ -230,6 +230,13 @@
         deviceDownload = getInitialData();
     };
 
+    const operateFormatter = function(value, row, index) {
+        return [
+            `<a class="like" href="/requests?sourceIP=${row.sourceIP}" title="Like">`,
+            '<button type="button" class="btn btn-primary">Requests</button>',
+            '</a>  ',
+        ].join('')
+    }
 
     $("#device-table").bootstrapTable({
         data: [],
@@ -272,6 +279,19 @@
                 title: 'Total',
                 sortable: true,
                 searchable: false,
+            },
+            {
+                field: 'totalBytes',
+                title: 'Total',
+                sortable: true,
+                searchable: false,
+            },
+            {
+                field: 'operate',
+                title: 'Operation',
+                align: 'center',
+                clickToSelect: false,
+                formatter: operateFormatter
             }
         ],
         search: true,
