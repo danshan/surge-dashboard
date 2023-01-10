@@ -233,7 +233,7 @@
     const operateFormatter = function(value, row, index) {
         return [
             `<a class="like" href="/requests?sourceIP=${row.sourceIP}" title="Like">`,
-            '<button type="button" class="btn btn-primary">Requests</button>',
+            '<button type="button" class="btn btn-primary btn-sm">Requests</button>',
             '</a>  ',
         ].join('')
     }
@@ -241,12 +241,6 @@
     $("#device-table").bootstrapTable({
         data: [],
         columns: [
-            {
-                field: 'id',
-                title: '#',
-                sortable: true,
-                searchable: false,
-            },
             {
                 field: 'name',
                 title: 'Device Name',
@@ -264,13 +258,13 @@
             },
             {
                 field: 'upload',
-                title: 'Upload',
+                title: 'Up',
                 sortable: true,
                 searchable: false,
             },
             {
                 field: 'download',
-                title: 'Download',
+                title: 'Down',
                 sortable: true,
                 searchable: false,
             },
@@ -282,7 +276,7 @@
             },
             {
                 field: 'operate',
-                title: 'Operation',
+                title: 'Ops',
                 align: 'center',
                 clickToSelect: false,
                 formatter: operateFormatter
